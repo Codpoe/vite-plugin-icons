@@ -1,9 +1,20 @@
-import type { Plugin } from 'vite'
+import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite'
 import { Options, ResolvedOptions } from './types'
 import { generateComponentFromPath, isIconPath, normalizeIconPath } from './loader'
 
+function detectCompiler(config: ResolvedConfig): NonNullable<Options['compiler']> {
+  if (config.plugins.some(i => i.name === 'react-refresh'))
+    return 'react'
+
+  if (config.plugins.some(i => i.name === 'vite-plugin-vue2'))
+    return 'vue2'
+
+  return 'vue3'
+}
+
 function VitePluginIcons(userOptions: Options = {}): Plugin {
   let options: ResolvedOptions
+  let server: ViteDevServer
 
   return {
     name: 'vite-plugin-icons',
@@ -13,8 +24,11 @@ function VitePluginIcons(userOptions: Options = {}): Plugin {
         scale: 1.2,
         defaultStyle: '',
         defaultClass: '',
-        compiler: config.plugins.find(i => i.name === 'vite-plugin-vue2') ? 'vue2' : 'vue3',
+        compiler: detectCompiler(config),
       }, userOptions)
+    },
+    configureServer(_server) {
+      server = _server
     },
     resolveId(id) {
       if (isIconPath(id)) {
@@ -28,6 +42,10 @@ function VitePluginIcons(userOptions: Options = {}): Plugin {
         return await generateComponentFromPath(id, options) || null
 
       return null
+    },
+    async transform(code, id) {
+      if (isIconPath(id) && options.compiler === 'react')
+        return await server.transformWithEsbuild(code, `${id}.jsx`)
     },
   }
 }

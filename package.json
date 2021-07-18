@@ -21,8 +21,8 @@
   "bugs": "https://github.com/antfu/vite-plugin-icons/issues",
   "scripts": {
     "dev": "npm run build -- --watch",
-    "example:dev": "npm -C examples/vue3 run dev",
-    "example:build": "npm -C examples/vue3 run build",
+    "example:dev": "npm -C examples/react run dev",
+    "example:build": "npm -C examples/react run build",
     "build": "tsup src/index.ts --dts --format cjs,esm",
     "prepublishOnly": "npm run build",
     "release": "npx bumpp --commit --tag && npm publish && git push"
@@ -42,11 +42,13 @@
   },
   "dependencies": {
     "@iconify/json-tools": "^1.0.10",
+    "@svgr/core": "^5.5.0",
     "vue-template-es2015-compiler": "^1.9.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.6.6",
     "@types/node": "^15.0.3",
+    "@types/react": "^17.0.14",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@vue/compiler-sfc": "^3.1.4",
     "eslint": "^7.30.0",

@@ -25,7 +25,7 @@ export interface Options {
    *
    * @default [detect automatically]
    */
-  compiler?: 'vue2' | 'vue3'
+  compiler?: 'vue2' | 'vue3' | 'react'
 }
 
 export type ResolvedOptions = Required<Options>

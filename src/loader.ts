@@ -1,5 +1,6 @@
 // @ts-ignore
 import { SVG, Collection } from '@iconify/json-tools'
+import { ReactCompiler } from './compiler/react'
 import { Vue2Compiler } from './compiler/vue2'
 import { Vue3Compiler } from './compiler/vue3'
 import { URL_PREFIXES } from './constants'
@@ -93,6 +94,9 @@ export async function generateComponent({ collection: name, icon }: ResolvedIcon
 
   if (!svgText)
     return null
+
+  if (options.compiler === 'react')
+    return ReactCompiler(svgText, name, icon)
 
   if (options.compiler === 'vue2')
     return Vue2Compiler(svgText, name, icon)
